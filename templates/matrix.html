@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matrix | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; }
+        .navbar strong { color: #4f46e5; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow-x: auto; }
+        .card h2 { margin-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-size: 0.85rem; }
+        th { background: #f1f5f9; font-weight: 600; color: #1e293b; }
+        td:first-child { text-align: left; }
+        
+        .allow { background: #d1fae5; color: #065f46; font-weight: 600; }
+        .deny { background: #fee2e2; color: #991b1b; font-weight: 600; }
+        
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 10px; font-weight: 500; font-size: 0.9rem; }
+        .btn-back:hover { background: #f8fafc; }
+        .legend span { display: inline-block; padding: 5px 12px; margin-right: 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        small { color: #64748b; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>📊 Access Matrix</h2>
+            <p><small>Rows = Users | Columns = Rooms (1 = Allowed, 0 = Denied)</small></p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">User / Role</th>
+                        {% for room in rooms %}
+                            <th>{{ room }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user, data in users.items() %}
+                        <tr>
+                            <td><strong>{{ user }}</strong><br><small>{{ data.role }}</small></td>
+                            {% for value in matrix[user] %}
+                                <td class="{{ 'allow' if value == 1 else 'deny' }}">{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="legend">
+                <span class="allow">1 = Allowed</span>
+                <span class="deny">0 = Denied</span>
+            </div>
+            <br>
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

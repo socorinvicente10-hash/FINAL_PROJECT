@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | Student Access and Data Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%); display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #1e293b; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 25px; }
+        input { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; background: #f8fafc; }
+        input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        label { font-size: 0.85rem; font-weight: 600; color: #1e293b; }
+        button { width: 100%; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: 0.2s; margin-top: 10px; }
+        button:hover { background: #4338ca; }
+        .alert { padding: 12px; margin-bottom: 15px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; }
+        .success { background: #d1fae5; color: #065f46; }
+        .danger { background: #fee2e2; color: #991b1b; }
+        .info { background: #e0f2fe; color: #0369a1; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        .test-accounts { font-size: 0.8rem; color: #64748b; text-align: center; background: #f8fafc; padding: 12px; border-radius: 8px; }
+        .test-accounts strong { color: #1e293b; display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔐 Student Access and Data Management System</h2>
+        <p class="subtitle">BISU - Clarin Campus</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+        
+        <hr>
+        <div class="test-accounts">
+            <strong>Test Accounts:</strong>
+            admin / gwapo123 (Admin)<br>
+            proof_Cristian / maot123 (Faculty)<br>
+            jericho_cosadio / maot123 (Student)<br>
+            visitor1 / maot123 (Visitor)
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proof | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; }
+        .navbar strong { color: #4f46e5; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { margin-bottom: 10px; }
+        small { color: #64748b; }
+        
+        pre { background: #f8fafc; padding: 20px; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; font-family: monospace; white-space: pre-wrap; border: 1px solid #e2e8f0; margin-top: 15px; color: #1e293b; }
+        
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 500; font-size: 0.9rem; }
+        .btn-back:hover { background: #f8fafc; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('matrix_view') }}">Matrix</a>
+            <a href="{{ url_for('proof') }}">Proof</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>📐 Short Proof of System Validity</h2>
+            <p><small>This proves that the access rules are <strong>valid</strong> and <strong>consistent</strong>.</small></p>
+            <pre>{% for line in proof_lines %}{{ line }}
+{% endfor %}</pre>
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

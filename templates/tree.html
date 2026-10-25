@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Campus Tree | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+        .navbar strong { color: #4f46e5; font-size: 1.1rem; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { margin-bottom: 10px; font-weight: 600; }
+        small { color: #64748b; font-size: 0.9rem; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        
+        .tree-node { 
+            margin: 6px 0; 
+            padding: 12px 15px; 
+            background: #f8fafc; 
+            border-left: 4px solid #4f46e5; 
+            border-radius: 6px; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .tree-node:hover { background: #f1f5f9; transform: translateX(5px); }
+
+        /* Indentation classes */
+        .indent-0 { margin-left: 0px; }
+        .indent-1 { margin-left: 25px; }
+        .indent-2 { margin-left: 50px; }
+        .indent-3 { margin-left: 75px; }
+
+        /* Colors per level */
+        .level-0 { border-left-color: #ef4444; font-weight: 700; background: #fef2f2; color: #991b1b; }
+        .level-1 { border-left-color: #f59e0b; background: #fffbeb; }
+        .level-2 { border-left-color: #10b981; background: #f0fdf4; }
+        .level-3 { border-left-color: #0ea5e9; background: #e0f2fe; }
+        
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 25px; font-weight: 500; font-size: 0.9rem; transition: 0.2s; }
+        .btn-back:hover { background: #f8fafc; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🌳 Campus Hierarchy</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Campus Structure</h2>
+            <p><small>Applied Discrete Math: Trees & Recursive Traversal</small></p>
+            <hr>
+
+            <!-- Tree Display -->
+            {% for node in tree_data %}
+                <div class="tree-node level-{{ node['level'] }} indent-{{ node['level'] }}">
+                    {% if node['level'] == 0 %}🏫 {% elif node['level'] == 1 %}🏢 {% elif node['level'] == 2 %}🏬 {% else %}🚪 {% endif %}
+                    {{ node['name'] }}
+                </div>
+            {% endfor %}
+            
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

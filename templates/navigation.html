@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Navigation | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; }
+        .navbar strong { color: #4f46e5; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { margin-bottom: 10px; }
+        small { color: #64748b; }
+        
+        select, button { padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        select { background: #f8fafc; }
+        button { background: #10b981; color: white; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        button:hover { background: #059669; }
+        
+        .result-box { background: #e0f2fe; color: #0369a1; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #0ea5e9; }
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 500; font-size: 0.9rem; }
+        .btn-back:hover { background: #f8fafc; }
+        label { font-weight: 600; font-size: 0.9rem; display: block; margin-top: 10px; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>🧭 Campus Navigation</h2>
+            <p><small>Using Dijkstra's Algorithm to find the shortest route between rooms.</small></p>
+            <hr>
+            
+            <form method="POST">
+                <label>Starting Room:</label>
+                <select name="start_room" required>
+                    {% for room in rooms %}
+                        <option value="{{ room }}">{{ room }}</option>
+                    {% endfor %}
+                </select>
+
+                <label>Destination Room:</label>
+                <select name="end_room" required>
+                    {% for room in rooms %}
+                        <option value="{{ room }}">{{ room }}</option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit">Calculate Shortest Path</button>
+            </form>
+
+            {% if path %}
+                <div class="result-box">
+                    <h3 style="margin-bottom: 10px;">✅ Path Found!</h3>
+                    <p style="margin-top: 10px;"><strong>Route:</strong> <br>{{ path | join(' ➔ ') }}</p>
+                    <p style="margin-top: 10px;"><strong>Total Distance:</strong> {{ cost }} units</p>
+                </div>
+            {% elif cost is not none %}
+                <div class="result-box" style="background: #fee2e2; color: #991b1b; border-color: #ef4444;">
+                    <h3>❌ No Path Found!</h3>
+                </div>
+            {% endif %}
+            
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

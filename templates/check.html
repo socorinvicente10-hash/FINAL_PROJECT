@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Access | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; }
+        .navbar strong { color: #4f46e5; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { margin-bottom: 20px; }
+        
+        select, button { padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        select { background: #f8fafc; }
+        button { background: #4f46e5; color: white; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        button:hover { background: #4338ca; }
+        
+        .granted { background: #d1fae5; color: #065f46; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: 600; border: 1px solid #a7f3d0; }
+        .denied { background: #fee2e2; color: #991b1b; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: 600; border: 1px solid #fecaca; }
+        
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 500; font-size: 0.9rem; }
+        .btn-back:hover { background: #f8fafc; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        label { font-weight: 600; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>🔍 Check Room Access</h2>
+            <p style="color: #64748b; margin-bottom: 20px;"><strong>User:</strong> {{ session['name'] }} ({{ session['role']|capitalize }})</p>
+            
+            <form method="POST">
+                <label for="room">Select Room:</label>
+                <select name="room" id="room" required>
+                    {% for room in rooms %}
+                        <option value="{{ loop.index0 }}">{{ room }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Check Access</button>
+            </form>
+            
+            {% if result %}
+                <hr>
+                <div class="{{ 'granted' if result.allowed else 'denied' }}">
+                    <strong>{{ result.message }}</strong>
+                    <p style="font-size: 0.9rem; margin-top: 10px; font-weight: 400;">
+                        User: {{ result.user }}<br>Room: {{ result.room }}
+                    </p>
+                </div>
+            {% endif %}
+            
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

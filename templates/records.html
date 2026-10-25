@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Records | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        
+        /* NAVBAR */
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+        .navbar strong { color: #4f46e5; font-size: 1.1rem; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        /* CONTAINER & CARD */
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { margin-bottom: 10px; font-weight: 600; }
+        small { color: #64748b; font-size: 0.9rem; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        
+        /* SEARCH BAR */
+        .search-form { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .search-form input, .search-form select { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; font-family: 'Inter', sans-serif; background: #f8fafc; transition: 0.2s; }
+        .search-form input { flex: 2; min-width: 200px; }
+        .search-form select { flex: 1; min-width: 150px; }
+        .search-form input:focus, .search-form select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        
+        .btn { padding: 12px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.95rem; }
+        .btn:hover { background: #4338ca; }
+        
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+        th { background: #f1f5f9; font-weight: 600; color: #1e293b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+        td { color: #334155; }
+        tr:hover { background: #f8fafc; }
+        
+        /* BADGES */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-admin { background: #fee2e2; color: #991b1b; }
+        .badge-faculty { background: #fef3c7; color: #92400e; }
+        .badge-student { background: #d1fae5; color: #065f46; }
+        .badge-visitor { background: #e0f2fe; color: #0369a1; }
+        
+        /* BUTTON BACK */
+        .btn-back { display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 25px; font-weight: 500; font-size: 0.9rem; transition: 0.2s; }
+        .btn-back:hover { background: #f8fafc; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>🔍 User Records</h2>
+            <p><small>Applied Discrete Math: Searching & Sorting Algorithms</small></p>
+            <hr>
+            
+            <!-- Search and Sort Form -->
+            <form method="GET" class="search-form">
+                <input type="text" name="search" placeholder="Search by username or name..." value="{{ search_query }}">
+                <select name="sort">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Sort by Name</option>
+                    <option value="role" {% if sort_by == 'role' %}selected{% endif %}>Sort by Role</option>
+                    <option value="username" {% if sort_by == 'username' %}selected{% endif %}>Sort by Username</option>
+                </select>
+                <button type="submit" class="btn">Apply</button>
+            </form>
+
+            <!-- Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td><strong>{{ u.username }}</strong></td>
+                            <td>{{ u.name }}</td>
+                            <td>
+                                <!-- Dynamic badge color base sa role -->
+                                <span class="badge 
+                                    {% if u.role == 'admin' %}badge-admin
+                                    {% elif u.role == 'faculty' %}badge-faculty
+                                    {% elif u.role == 'student' %}badge-student
+                                    {% else %}badge-visitor{% endif %}">
+                                    {{ u.role | capitalize }}
+                                </span>
+                            </td>
+                            <td>{{ u.ID }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #64748b; padding: 30px;">
+                                No records found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <a href="{{ url_for('dashboard') }}" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

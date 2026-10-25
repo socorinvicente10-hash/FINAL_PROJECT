@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
+        .navbar strong { color: #4f46e5; font-size: 1.1rem; }
+        .navbar div { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; font-size: 0.9rem; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .card h2, .card h3 { margin-bottom: 15px; font-weight: 600; color: #1e293b; }
+        
+        .btn { display: inline-block; padding: 10px 18px; border-radius: 8px; font-weight: 500; font-size: 0.9rem; text-decoration: none; cursor: pointer; border: none; text-align: center; transition: 0.2s; }
+        .btn-primary { background: #4f46e5; color: white; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-info { background: #0ea5e9; color: white; }
+        .btn-outline { background: transparent; border: 1px solid #e2e8f0; color: #1e293b; }
+        .btn-outline:hover { background: #f8fafc; }
+        
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #e0e7ff; color: #3730a3; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        
+        input, select { padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.9rem; background: #f8fafc; }
+        button { padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        button:hover { background: #059669; }
+        ul { list-style: none; }
+        ul li { padding: 10px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 15px 0; }
+        .concept-box { background: #f8fafc; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #4f46e5; font-size: 0.9rem; }
+        .result-box { background: #d1fae5; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #10b981; font-size: 0.9rem; }
+        code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>🔐 Smart Campus System</strong>
+        <div>
+            <span style="color: #64748b;">Welcome, {{ name }}</span>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('navigation') }}">🧭 Navigation</a>
+            <a href="{{ url_for('records') }}">🔍 Records</a>
+            <a href="{{ url_for('tree_view') }}">🌳 Tree</a>
+            <a href="{{ url_for('matrix_view') }}">📊 Matrix</a>
+            <a href="{{ url_for('proof') }}">📐 Proof</a>
+            <a href="{{ url_for('graph_view') }}">📊 Graph View</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h2>👋 Welcome, {{ name }}!</h2>
+                    <p style="color: #64748b; font-size: 0.9rem;">Username: {{ user }} | Role: {{ role|capitalize }}</p>
+                </div>
+                <span class="badge badge-info">FSM: {{ fsm_state }}</span>
+            </div>
+            <hr>
+            <div>
+                <a href="{{ url_for('check') }}" class="btn btn-primary">🔍 Check Access</a>
+                <a href="{{ url_for('navigation') }}" class="btn btn-success">🧭 Navigation</a>
+                <a href="{{ url_for('records') }}" class="btn btn-info">🔍 Records</a>
+                <a href="{{ url_for('tree_view') }}" class="btn btn-outline">🌳 Tree</a>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>🤖 Finite State Machine</h3>
+                <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Current State:</p>
+                <h2><span class="badge badge-success" style="font-size: 1rem;">{{ fsm_state }}</span></h2>
+                <p style="margin-top:10px; font-size:0.8rem; color:#64748b;">FSM Transitions: Idle → Login → Access Granted/Denied → Navigating → Monitoring → Exit</p>
+            </div>
+
+            <div class="card">
+                <h3>🎲 Probability Simulation</h3>
+                <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Room Availability (80% Available / 20% Occupied)</p>
+                <ul>
+                    {% for room, is_available in room_availability.items() %}
+                        <li>
+                            {{ room }}
+                            {% if is_available %}
+                                <span class="badge badge-success">Available</span>
+                            {% else %}
+                                <span class="badge badge-danger">Occupied</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>🔢 Number Theory Feature</h3>
+            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Modulo Arithmetic & GCD</p>
+            <form method="POST" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 5px;">Student ID</label>
+                    <input type="number" name="id" placeholder="e.g., 2" required style="width: 100%;">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 5px;">Room Number</label>
+                    <input type="number" name="room" placeholder="e.g., 10" required style="width: 100%;">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 5px;">Operation</label>
+                    <select name="operation" required style="width: 100%;">
+                        <option value="modulo">Modulo</option>
+                        <option value="gcd">GCD</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" style="height: 42px;">Check</button>
+                </div>
+            </form>
+            
+            {% if num_result %}
+                <div class="result-box">
+                    <p><strong>Operation:</strong> {{ num_result.op }}</p>
+                    <p><strong>Formula:</strong> {{ num_result.formula }}</p>
+                    <p><strong>Result:</strong> {{ num_result.computed }}</p>
+                    <p><strong>Access:</strong> {{ num_result.msg }}</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="card">
+            <h3>📖 Explanation of Concepts</h3>
+            <div class="concept-box">
+                <h4 style="margin-bottom: 5px;">Sets:</h4>
+                <p>Students: {{ students }}<br>Faculty: {{ faculty }}<br>Visitors: {{ visitors }}<br>Admins: {{ admins }}</p>
+            </div>
+            <div class="concept-box">
+                <h4 style="margin-bottom: 5px;">Boolean Logic:</h4>
+                <p><code>can_access(user, room) → returns True/False</code></p>
+            </div>
+            <div class="concept-box">
+                <h4 style="margin-bottom: 5px;">Graphs, Trees, & FSM:</h4>
+                <p>Navigation uses <strong>Dijkstra's Algorithm (Graph)</strong>.</p>
+                <p>Tree uses <strong>Recursive Traversal</strong>.</p>
+                <p>Session State uses <strong>Finite State Machine</strong>.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph Representation | Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+        
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+        .navbar strong { color: #4f46e5; font-size: 1.1rem; }
+        .navbar div { display: flex; gap: 15px; }
+        .navbar a { color: #64748b; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .navbar a:hover { color: #4f46e5; }
+        
+        .container { max-width: 1300px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; text-align: center; }
+        .card h2 { margin-bottom: 10px; font-weight: 600; }
+        small { color: #64748b; font-size: 0.9rem; }
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+
+        /* GRAPH VISUALIZATION CSS */
+        .graph-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 60px 0 120px 0;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ANG MGA NODE UG EDGE */
+        .node-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            padding: 0 10px;
+        }
+
+        .node {
+            width: 75px;
+            height: 75px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+            padding: 5px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .node.junction { background: #10b981; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.4); }
+
+        .edge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1; /* Para mo-stretch ang linya */
+            position: relative;
+        }
+
+        .line {
+            width: 100%;
+            height: 4px;
+            background: #cbd5e1;
+        }
+
+        .weight {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #64748b;
+            position: absolute;
+            top: -12px;
+            z-index: 5;
+        }
+
+        .walkway-gap {
+            flex-grow: 1;
+            height: 4px;
+            border-top: 3px dashed #ef4444;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 0 5px;
+        }
+
+        .walkway-gap .weight { color: #ef4444; border-color: #ef4444; }
+
+        /* =========================================
+           ALTERNATE ROUTE (Gikan Lab 1 to Educ Room)
+           ========================================= */
+        .alternate-route-box {
+            position: absolute;
+            bottom: 40px;
+            /* 11% gikan sa wala (center sa Lab 1), 15% gikan sa tuo (center sa Educ Room) */
+            left: 22%; 
+            right: 17%;
+            height: 60px;
+            border: 4px dashed #10b981;
+            border-top: none; 
+            border-radius: 0 0 20px 20px; 
+            z-index: 1;
+        }
+
+        .alt-label {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 15;
+            box-shadow: 0 2px 5px rgba(16,185,129,0.3);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>📊 Graph Representation</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('navigation') }}">Navigation</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Visual Graph of Campus Rooms</h2>
+            <p><small>Ang mga Lingin kay <strong>Vertices (Nodes)</strong> ug ang mga Linya kay <strong>Edges (Paths)</strong>. Ang Kurba sa ubos kay ang Alternate Route.</p></small>
+            <hr>
+            
+            <div class="graph-wrapper">
+                
+                <!-- MAIN ROUTE (TAAS) -->
+                <div class="node-row">
+                    <div class="node">Library</div>
+                    <div class="edge"><div class="line"></div><div class="weight">5</div></div>
+                    
+                    <div class="node">Faculty</div>
+                    <div class="edge"><div class="line"></div><div class="weight">5</div></div>
+                    
+                    <div class="node">Dean</div>
+                    <div class="edge"><div class="line"></div><div class="weight">8</div></div>
+                    
+                    <!-- JUNCTION NODE (Sugod sa kurba) -->
+                    <div class="node junction">Com Lab 1</div>
+
+                    <div class="edge"><div class="line"></div><div class="weight">4</div></div>
+                    <div class="node">Com Lab 2</div>
+                    
+                    <div class="edge"><div class="line"></div><div class="weight">4</div></div>
+                    <div class="node">Com Lab 3</div>
+                    
+                    <div class="edge"><div class="line"></div><div class="weight">4</div></div>
+                    <div class="node">Com Lab 4</div>
+                    
+                    <div class="edge"><div class="line"></div><div class="weight">4</div></div>
+                    <div class="node">Com Lab 5</div>
+                    
+                    <div class="walkway-gap"><div class="weight">Gap (15)</div></div>
+                    
+                    <!-- KATAPUSAN SA KURBA (Educ Room) -->
+                    <div class="node">Educ Room</div>
+                    
+                    <div class="edge"><div class="line"></div><div class="weight">5</div></div>
+                    <div class="node">Registrar</div>
+                </div>
+
+                <!-- ANG KURBA -->
+                <div class="alternate-route-box">
+                    <div class="alt-label">Alternate Route (18 units) ➔ to Educ Room</div>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('dashboard') }}" style="display: inline-block; padding: 10px 20px; background: transparent; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; border-radius: 8px; margin-top: 25px; font-weight: 500; font-size: 0.9rem;">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
